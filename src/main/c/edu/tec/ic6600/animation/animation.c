@@ -26,9 +26,7 @@ Copyright (C) 2020 Natan & Kenny
 #include <stdio.h>
 #include <stdlib.h>
 
-#include "my_pthreads.h"
-#include "my_mutex.h"
-#include "my_sched.h"
+
 
 my_mutex field_lock;
 

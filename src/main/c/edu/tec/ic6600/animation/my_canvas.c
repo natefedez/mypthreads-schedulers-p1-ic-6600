@@ -27,14 +27,64 @@ Copyright (C) 2020 Natan & Kenny
 #include <stdlib.h>
 #include <curses.h>
 
-void intialize_canvas(int height_lines, int width_cols){
+#include "../config/my_parser.h"
 
+void initialize_canvas(){
+
+  for(int i = 0; i < ITEMS_COUNT; i++){
+
+    if(configuration->item_list[i] == NULL) break;
+
+    printf("%d\n", configuration->item_list[i]->posicion_inicial_x);
+    printf("%d\n", configuration->item_list[i]->posicion_inicial_y);
+    printf("%d\n", configuration->item_list[i]->posicion_final_x);
+    printf("%d\n", configuration->item_list[i]->posicion_final_y);
+    printf("%d\n", configuration->item_list[i]->angulo);
+
+    configuration->item_list[i]->posicion_actual_x = configuration->item_list[i]->posicion_inicial_x;
+    configuration->item_list[i]->posicion_actual_y = configuration->item_list[i]->posicion_inicial_y;
+
+  }
+
+
+  int x = 0, y = 0;
   initscr();
-  cbreak();
   noecho();
+  curs_set(FALSE);
 
-  y0 = 0;
-  x0 = 0;
-  WINDOW * win = newwin(height_lines, width_cols, y0, x0);
+
+
+  while(1) {
+    clear(); // Clear the screen of all
+    // previously-printed characters
+
+  for(int i = 0; i < ITEMS_COUNT; i++){
+    if(configuration->item_list[i] == NULL) break;
+
+        mvprintw(configuration->item_list[i]->posicion_actual_y-2, configuration->item_list[i]->posicion_actual_x, configuration->item_list[i]->ascii_item[0]);
+        mvprintw(configuration->item_list[i]->posicion_actual_y-1, configuration->item_list[i]->posicion_actual_x, configuration->item_list[i]->ascii_item[1]);
+        mvprintw(configuration->item_list[i]->posicion_actual_y, configuration->item_list[i]->posicion_actual_x, configuration->item_list[i]->ascii_item[2]);
+        mvprintw(configuration->item_list[i]->posicion_actual_y+1, configuration->item_list[i]->posicion_actual_x, configuration->item_list[i]->ascii_item[3]);
+        mvprintw(configuration->item_list[i]->posicion_actual_y+2, configuration->item_list[i]->posicion_actual_x, configuration->item_list[i]->ascii_item[4]);
+
+        if(configuration->item_list[i]->posicion_actual_y < configuration->item_list[i]->posicion_final_y)
+          configuration->item_list[i]->posicion_actual_y++;
+        if(configuration->item_list[i]->posicion_actual_x < configuration->item_list[i]->posicion_final_x)
+          configuration->item_list[i]->posicion_actual_x++;
+
+        if(configuration->item_list[i]->posicion_actual_y > configuration->item_list[i]->posicion_final_y)
+          configuration->item_list[i]->posicion_actual_y--;
+        if(configuration->item_list[i]->posicion_actual_x > configuration->item_list[i]->posicion_final_x)
+          configuration->item_list[i]->posicion_actual_x--;
+
+  }
+  
+    refresh();
+
+    usleep(900000); // Shorter delay between movements
+    x++; // Advance the ball to the right
+    y++;
+  }
+
 
 }

@@ -28,5 +28,7 @@ Copyright (C) 2020 Natan & Kenny
 #include <stdlib.h>
 #include <curses.h>
 
+void intialize_canvas();
+
 int y0;
 int x0;

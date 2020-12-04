@@ -34,11 +34,11 @@ int main() {
 
 	my_parser();
 
-	//printf("%s\n", configuration->protocolo);
-//	printf("%d\n", configuration->monitors_list->head->id);
-	//printf("%d\n", configuration->monitors_list->head->width_canvas_size);
+	printf("%s\n", configuration->protocolo);
+    printf("%d\n", configuration->monitors_list->head->id);
+	printf("%d\n", configuration->monitors_list->head->width_canvas_size);
 
-	intialize_canvas(configuration-> monitors_list -> head -> height_canvas_size,configuration -> monitors_list -> head -> width_canvas_size);
+	initialize_canvas();
 
 	return 0;
 

@@ -75,7 +75,11 @@ void my_parser(){
 			strcpy(tmp_item->ascii_item[2], strtok(fgets(input, 64, ptofile), "\n"));
 			strcpy(tmp_item->ascii_item[3], strtok(fgets(input, 64, ptofile), "\n"));
 			strcpy(tmp_item->ascii_item[4], strtok(fgets(input, 64, ptofile), "\n"));
-			
+			tmp_item->posicion_inicial_x = atoi(strtok(fgets(input, 64, ptofile), "-"));
+			tmp_item->posicion_inicial_y = atoi(strtok(NULL, "\n"));
+			tmp_item->posicion_final_x = atoi(strtok(fgets(input, 64, ptofile), "-"));
+			tmp_item->posicion_final_y = atoi(strtok(NULL, "\n"));
+			tmp_item->angulo = atoi(fgets(input, 64, ptofile));
 			configuration->item_list[index] = (item_info *) malloc(sizeof(item_info));
 			configuration->item_list[index] = tmp_item;
 			index ++;
@@ -83,11 +87,6 @@ void my_parser(){
 	}
 	
 	configuration->espacio_entre_objetos = atoi(fgets(input, 64, ptofile));
-	
-	configuration->posicion_inicial = atoi(fgets(input, 64, ptofile));
-	configuration->posicion_final = atoi(fgets(input, 64, ptofile));
-	configuration->angulo_inicial = atoi(fgets(input, 64, ptofile));
-	configuration->angulo_final = atoi(fgets(input, 64, ptofile));
 
 	printf("Procesamiento exitoso...\n");
 	
