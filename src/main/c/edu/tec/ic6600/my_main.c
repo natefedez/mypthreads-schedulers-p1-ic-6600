@@ -22,7 +22,7 @@ Copyright (C) 2020 Natan & Kenny
     Kenneth Rodriguez Murillo - 2018132752
 ========================================================================*/
 
-#include "my_parser.h"
+#include "config/my_parser.h"
 
 #include <stdio.h>
 #include <stdlib.h>
