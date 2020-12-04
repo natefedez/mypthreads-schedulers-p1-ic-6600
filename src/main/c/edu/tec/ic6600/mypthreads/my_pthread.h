@@ -22,7 +22,6 @@ Copyright (C) 2020 Natan & Kenny
     Kenneth Rodriguez Murillo - 2018132752
 ========================================================================*/
 
-#ifndef my_pthread_h
 #define my_pthread_h
 
 #include <stdio.h>
