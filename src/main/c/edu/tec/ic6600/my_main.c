@@ -23,6 +23,7 @@ Copyright (C) 2020 Natan & Kenny
 ========================================================================*/
 
 #include "config/my_parser.h"
+#include "animation/my_canvas.h"
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -33,10 +34,12 @@ int main() {
 
 	my_parser();
 
-	printf("%s\n", configuration->protocolo);
-	printf("%d\n", configuration->monitors_list->head->id);
-	printf("%d\n", configuration->monitors_list->head->width_canvas_size);
- 
+	//printf("%s\n", configuration->protocolo);
+//	printf("%d\n", configuration->monitors_list->head->id);
+	//printf("%d\n", configuration->monitors_list->head->width_canvas_size);
+
+	intialize_canvas(configuration-> monitors_list -> head -> height_canvas_size,configuration -> monitors_list -> head -> width_canvas_size);
+
 	return 0;
 
 }
