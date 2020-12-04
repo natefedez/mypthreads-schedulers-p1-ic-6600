@@ -30,7 +30,7 @@ void my_thread_end {
 	dead_threads[current_context] = 1;
     total_tickets-=tickets[current_context];
     active_threads_aux--;
-    
+
     //timer_interrupt();
 
 }
@@ -44,19 +44,19 @@ void my_thread_yield {
 void run_threads(){
 
     current_thread = &threads[0];
-    
+
     setcontext(&threads[0]);
 
 }
 
 static void execute_exit_context(){
-    
+
     boolean_dead_threads[current_context] = 1;
     total_tickets -= tickets[current_context];
     active_threads_aux--;
-    
+
     timer_interrupt();
-    
+
     while(1);
 }
 
@@ -72,9 +72,9 @@ static void set_exit_context() {
         exitContext.uc_stack.ss_sp = malloc(STACK_SIZE);
         exitContext.uc_stack.ss_size = STACK_SIZE;
         exitContext.uc_stack.ss_flags= 0;
-        
+
         makecontext(&exitContext, (void (*) (void))&execute_exit_context, 0);
-        
+
         exit_context_created = 1;
     }
 
@@ -87,29 +87,29 @@ void set_thread_context {
 	// Inicializa en 0 los dead_threads
     for(i = 0; i < NUM_THREADS; i++)
         dead_threads[i] = 0;
-    
+
     set_exit_context();
-    
+
     struct itimerval it;
-    
+
     signal_stack = malloc(STACK_SIZE);
-    
+
     it.it_interval.tv_sec = 0;
     it.it_interval.tv_usec = INTERVAL * 1000;
     it.it_value = it.it_interval;
-    
+
     setitimer(ITIMER_REAL, &it, NULL);
-    
+
     struct sigaction act;
     act.sa_sigaction = timer_interrupt;
-    
+
     sigemptyset(&act.sa_mask);
     act.sa_flags = SA_RESTART | SA_SIGINFO;
-    
+
     sigemptyset(&set);
-    
+
     sigaddset(&set, SIGALRM);
-    
+
     sigaction(SIGALRM, &act, NULL);
 
 }
@@ -143,7 +143,6 @@ void my_thread_create(void *dont_kill_the_funk, void *args, int tickets, int pri
 	// https://www.unix.com/man-page/linux/7posix/ucontext.h/
 	if (!init) {
 		set_thread_context();
-		init++;
 	}
 
 	// https://www.unix.com/man-page/linux/2/sigaltstack/
@@ -165,8 +164,8 @@ void my_thread_create(void *dont_kill_the_funk, void *args, int tickets, int pri
 
     // Inicializa y vacia un signal set
     sigemptyset(&ucontext_thread -> ucontext_thread_sigmask);
-    
-    // Se manda la funcion al context 
+
+    // Se manda la funcion al context
     makecontext(ucontext_thread, function, 1, args);
 
     tickets[active_threads] = tickets_sched;
