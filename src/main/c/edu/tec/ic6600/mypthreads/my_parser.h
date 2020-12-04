@@ -22,58 +22,55 @@ Copyright (C) 2020 Natan & Kenny
     Kenneth Rodriguez Murillo - 2018132752
 ========================================================================*/
 
-#ifndef my_pthread_h
-#define my_pthread_h
+
 
 #include <stdio.h>
-#include <stdlib.h>
+#include <stdlib.h> 
 
-#include <ucontext.h>
-#include <sys/types.h> //https://www.unix.com/man-page/linux/3head/types.h/
-#include <sys/time.h> 
-#include <unistd.h>
-#include <signal.h>
-
-#define STACK_SIZE 10000
-#define NUM_THREADS 1000
-#define INTERVAL 1000
+#define ITEMS_COUNT 10 
 
 
+/* The monitor information for the animation */
+typedef struct monitor_info {
 
-// Funciones a extender
+  int id;  //monitor id
+  int width_canvas_size; //monitor width_canvas_size
+  int height_canvas_size; //monitor height_canvas_size
+  struct monitor_info *prev, *next; 
 
-void my_thread_create(void *dont_kill_the_funk, void *args, int tickets, int priority)
+}monitor_info;
 
-void my_thread_end();
+/* The monitor information for the animation */
+typedef struct monitor_queue {
 
-void my_thread_yield();
+  monitor_info *head;  //queue head node
+  monitor_info *tail;  //queue tail node
+  int size;  //queue size
 
-void my_thread_join();
+}monitor_queue;
 
-void my_thread_detach();
+/* The monitor information for the animation */
+typedef struct item_info {
 
-void run_threads(); //Corre los hilos
+  int scheduler;  //monitor id
+  char *ascii_item[ITEMS_COUNT]; //list of items
 
-void *signal_stack; //Signal stack
+}item_info;
 
-static void set_exit_context(); 
+typedef struct config {
 
-void set_thread_context(); 
+  int tiempo_de_inicio;
+  int tiempo_de_fin;
+  char *protocolo;
+  int numero_monitores;
+  monitor_queue *monitors_list;
+  item_info *item_list[ITEMS_COUNT];
+  int espacio_entre_objetos;
+  int posicion_inicial;
+  int posicion_final;
+  int angulo_inicial;
+  int angulo_final;
 
+}config;
 
-// Variables a utilizar
-
-// variables de contexto
-ucontext_t threads[NUM_THREADS];
-ucontext_t *current_thread;
-ucontext_t exit_context;
-
-int priority[NUM_THREADS];
-int priority_aux[NUM_THREADS];
-int tickets[NUM_THREADS];
-int dead_threads[NUM_THREADS];
-int current_context;
-int init;
-int active_threads;
-int active_threads_aux;
-int total_tickets;
+extern config *configuration;

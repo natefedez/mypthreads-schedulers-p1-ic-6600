@@ -17,63 +17,30 @@ Copyright (C) 2020 Natan & Kenny
 
     Remember Remember (mypthreads-schedulers-p1-ic-6600)
     Disponible en: https://github.com/natanfdecastro/mypthreads-schedulers-p1-ic-6600
-
+    
     Natan Fernandez de Castro - 2017105774
     Kenneth Rodriguez Murillo - 2018132752
 ========================================================================*/
 
-#ifndef my_pthread_h
-#define my_pthread_h
+
+#ifndef my_sched
+#define my_sched
 
 #include <stdio.h>
 #include <stdlib.h>
+#include <time.h>
+#include <string.h>
 
-#include <ucontext.h>
-#include <sys/types.h> //https://www.unix.com/man-page/linux/3head/types.h/
-#include <sys/time.h> 
-#include <unistd.h>
-#include <signal.h>
+void my_thread_chsched(char *sched); 
 
-#define STACK_SIZE 10000
-#define NUM_THREADS 1000
-#define INTERVAL 1000
+void run_threads(); 
 
+void my_sched_round_robin()
 
+void sched_sort(); //Scheduler de Sorteo
 
-// Funciones a extender
+void my_sched_real_time(); //Scheduler de Tiempo real
 
-void my_thread_create(void *dont_kill_the_funk, void *args, int tickets, int priority)
+void timer_interrupt(); //Crea el context segun el tipo de scheduler
 
-void my_thread_end();
-
-void my_thread_yield();
-
-void my_thread_join();
-
-void my_thread_detach();
-
-void run_threads(); //Corre los hilos
-
-void *signal_stack; //Signal stack
-
-static void set_exit_context(); 
-
-void set_thread_context(); 
-
-
-// Variables a utilizar
-
-// variables de contexto
-ucontext_t threads[NUM_THREADS];
-ucontext_t *current_thread;
-ucontext_t exit_context;
-
-int priority[NUM_THREADS];
-int priority_aux[NUM_THREADS];
-int tickets[NUM_THREADS];
-int dead_threads[NUM_THREADS];
-int current_context;
-int init;
-int active_threads;
-int active_threads_aux;
-int total_tickets;
+#endif
