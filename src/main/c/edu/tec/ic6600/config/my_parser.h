@@ -25,9 +25,9 @@ Copyright (C) 2020 Natan & Kenny
 
 
 #include <stdio.h>
-#include <stdlib.h> 
+#include <stdlib.h>
 
-#define ITEMS_COUNT 10 
+#define ITEMS_COUNT 10
 
 
 /* The monitor information for the animation */
@@ -36,7 +36,7 @@ typedef struct monitor_info {
   int id;  //monitor id
   int width_canvas_size; //monitor width_canvas_size
   int height_canvas_size; //monitor height_canvas_size
-  struct monitor_info *prev, *next; 
+  struct monitor_info *prev, *next;
 
 }monitor_info;
 
@@ -73,7 +73,9 @@ typedef struct config {
   monitor_queue *monitors_list;
   item_info *item_list[ITEMS_COUNT];
   int espacio_entre_objetos;
-  
+
 }config;
+
+void my_parser();
 
 extern config *configuration;

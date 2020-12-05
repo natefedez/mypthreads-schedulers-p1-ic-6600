@@ -17,13 +17,18 @@ Copyright (C) 2020 Natan & Kenny
 
     Remember Remember (mypthreads-schedulers-p1-ic-6600)
     Disponible en: https://github.com/natanfdecastro/mypthreads-schedulers-p1-ic-6600
-    
+
     Natan Fernandez de Castro - 2017105774
     Kenneth Rodriguez Murillo - 2018132752
 ========================================================================*/
 
 #include <stdio.h>
 #include <stdlib.h>
+
+#include <stdio.h>
+#include <stdlib.h>
+#include <time.h>
+#include <string.h>
 
 #include "my_pthread.h"
 #include "my_sched.h"
@@ -48,9 +53,9 @@ void my_sched_round_robin(){
 
         current_context = (current_context + 1);
 
-        if(dead_threads[current_context% active_threads]){
+        if(boolean_dead_threads[current_context% active_threads]){
 
-            while(dead_threads[current_context% active_threads]){
+            while(boolean_dead_threads[current_context% active_threads]){
                 current_context+=1;
             }
         }
@@ -80,8 +85,8 @@ void my_sched_sort(){
             aux -= tickets[i];
 
             if(aux<=0){
-                if(dead_threads[i% active_threads]){
-                    while(dead_threads[i% active_threads]){
+                if(boolean_dead_threads[i% active_threads]){
+                    while(boolean_dead_threads[i% active_threads]){
                         i+=1;
                     }
                 }
@@ -108,12 +113,12 @@ void my_sched_real_time(){
     int aux = -1;
     int last = current_context;
     int i;
-    
+
     if(active_threads_aux > 0){
 
         for (i = 0; i < active_threads; i++) {//busca hilo de mayor prioridad que no haya terminado
 
-            if(aux < priority[i] && !dead_threads[i] && !priority_aux[i]){
+            if(aux < priority[i] && !boolean_dead_threads[i] && !priority_aux[i]){
 
                 current_context = i;
                 aux = priority[i];
@@ -123,18 +128,18 @@ void my_sched_real_time(){
         if(aux == -1){
 
             for (i = 0; i < active_threads; i++) {
-                
+
                 priority_aux[i] = 0;
             }
 
-            sched_real();
+            my_sched_real_time();
 
         }
         else{
-            
+
             priority_aux[current_context] = 1;//pone el hilo como ya ejecutado para que no se encicle
             current_thread = &threads[current_context];//activa el nuevo hilo
-            
+
             setcontext(current_thread);
         }
     }
@@ -146,19 +151,19 @@ void my_sched_real_time(){
 void timer_interrupt(){
 
     getcontext(&signal_context);
-    
+
     signal_context.uc_stack.ss_sp = signal_stack;
-    signal_context.uc_stack.ss_size = STACKSIZE;
+    signal_context.uc_stack.ss_size = STACK_SIZE;
     signal_context.uc_stack.ss_flags = 0;
-    
+
     sigemptyset(&signal_context.uc_sigmask);
-    
-    if(active_sched == 0){makecontext(&signal_context, scheduler, 1);}
-    
-    if(active_sched == 1){makecontext(&signal_context, sched_sorteo, 1);}
-    
-    if(active_sched == 2){makecontext(&signal_context, sched_real, 1);}
-    
+
+    if(active_sched == 0){makecontext(&signal_context, my_sched_round_robin, 1);}
+
+    if(active_sched == 1){makecontext(&signal_context, my_sched_sort, 1);}
+
+    if(active_sched == 2){makecontext(&signal_context, my_sched_real_time, 1);}
+
     swapcontext(current_thread,&signal_context);
 
 }

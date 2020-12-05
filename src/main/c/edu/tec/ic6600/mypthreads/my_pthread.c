@@ -25,9 +25,9 @@ Copyright (C) 2020 Natan & Kenny
 #include "my_pthread.h"
 #include "my_sched.h"
 
-void my_thread_end {
+void my_thread_end(){
 
-	dead_threads[current_context] = 1;
+		boolean_dead_threads[current_context] = 1;
     total_tickets-=tickets[current_context];
     active_threads_aux--;
 
@@ -36,7 +36,7 @@ void my_thread_end {
 }
 
 
-void my_thread_yield {
+void my_thread_yield(){
 
 	//timer_interrupt();
 }
@@ -66,27 +66,27 @@ static void set_exit_context() {
 
     if(!exit_context_created){
 
-        getcontext(&exitContext);
+        getcontext(&exit_context);
 
-        exitContext.uc_link = 0;
-        exitContext.uc_stack.ss_sp = malloc(STACK_SIZE);
-        exitContext.uc_stack.ss_size = STACK_SIZE;
-        exitContext.uc_stack.ss_flags= 0;
+        exit_context.uc_link = 0;
+        exit_context.uc_stack.ss_sp = malloc(STACK_SIZE);
+        exit_context.uc_stack.ss_size = STACK_SIZE;
+        exit_context.uc_stack.ss_flags= 0;
 
-        makecontext(&exitContext, (void (*) (void))&execute_exit_context, 0);
+        makecontext(&exit_context, (void (*) (void))&execute_exit_context, 0);
 
         exit_context_created = 1;
     }
 
 }
 
-void set_thread_context {
+void set_thread_context(){
 
 	int i;
 
 	// Inicializa en 0 los dead_threads
     for(i = 0; i < NUM_THREADS; i++)
-        dead_threads[i] = 0;
+        boolean_dead_threads[i] = 0;
 
     set_exit_context();
 
@@ -115,19 +115,19 @@ void set_thread_context {
 }
 
 // TODO
-void my_thread_join {
+//void my_thread_join(){
 
-	return 0;
-}
+//	return 0;
+//}
 
 // TODO
-void my_thread_detach {
+//void my_thread_detach(){
 
 
-	return 0;
-}
+//	return 0;
+//}
 
-void my_thread_create(void *dont_kill_the_funk, void *args, int tickets, int priority){
+void my_thread_create(void *dont_kill_the_funk, void *args, int tickets_s, int priority_s){
 
 	/*
 	Recibe:
@@ -141,36 +141,36 @@ void my_thread_create(void *dont_kill_the_funk, void *args, int tickets, int pri
 
 	// Es posible no usar el if?
 	// https://www.unix.com/man-page/linux/7posix/ucontext.h/
-	if (!init) {
-		set_thread_context();
-	}
+		if (!init) {
+			set_thread_context();
+		}
 
-	// https://www.unix.com/man-page/linux/2/sigaltstack/
+		// https://www.unix.com/man-page/linux/2/sigaltstack/
 
-	void *stack; // para utilizar context
+		void *stack; // para utilizar context
 
-	// Crea objeto tipo context
-	ucontext_threadontext_t *ucontext_threadontext_thread = &threads[active_threads];
-    getcontext(ucontext_thread);tickets_sched
+		// Crea objeto tipo context
+		ucontext_t *thread = &threads[active_threads];
+    getcontext(thread);
 
     // Asigna memoria a context
     stack = malloc(STACK_SIZE);
 
     // Asigna valores por defecto
-    ucontext_thread -> ucontext_thread_stack.ss_sp = stack;
-    ucontext_thread -> ucontext_thread_stack.ss_size = STACK_SIZE;
-    ucontext_thread -> ucontext_thread_stack.ss_flags = 0;
-    ucontext_thread -> ucontext_thread_link = &exitContext;
+    thread -> uc_stack.ss_sp = stack;
+    thread -> uc_stack.ss_size = STACK_SIZE;
+    thread -> uc_stack.ss_flags = 0;
+    thread -> uc_link = &exit_context;
 
     // Inicializa y vacia un signal set
-    sigemptyset(&ucontext_thread -> ucontext_thread_sigmask);
+    sigemptyset(&thread -> uc_sigmask);
 
     // Se manda la funcion al context
-    makecontext(ucontext_thread, function, 1, args);
+    makecontext(thread, dont_kill_the_funk, 1, args);
 
-    tickets[active_threads] = tickets_sched;
-    priority[active_threads] = priority_sched;
-    total_tickets += tickets_sched;
+    tickets[active_threads] = tickets_s;
+    priority[active_threads] = priority_s;
+    total_tickets += tickets_s;
     active_threads++;
     active_threads_aux++;
 

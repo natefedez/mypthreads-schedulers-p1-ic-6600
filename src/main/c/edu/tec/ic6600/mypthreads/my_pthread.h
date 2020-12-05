@@ -29,7 +29,7 @@ Copyright (C) 2020 Natan & Kenny
 
 #include <ucontext.h>
 #include <sys/types.h> //https://www.unix.com/man-page/linux/3head/types.h/
-#include <sys/time.h> 
+#include <sys/time.h>
 #include <unistd.h>
 #include <signal.h>
 
@@ -41,7 +41,7 @@ Copyright (C) 2020 Natan & Kenny
 
 // Funciones a extender
 
-void my_thread_create(void *dont_kill_the_funk, void *args, int tickets, int priority)
+void my_thread_create(void *dont_kill_the_funk, void *args, int tickets, int priority);
 
 void my_thread_end();
 
@@ -55,12 +55,14 @@ void run_threads(); //Corre los hilos
 
 void *signal_stack; //Signal stack
 
-static void set_exit_context(); 
+static void set_exit_context();
 
-void set_thread_context(); 
+void set_thread_context();
 
 
 // Variables a utilizar
+
+sigset_t set;
 
 // variables de contexto
 ucontext_t threads[NUM_THREADS];
@@ -70,7 +72,7 @@ ucontext_t exit_context;
 int priority[NUM_THREADS];
 int priority_aux[NUM_THREADS];
 int tickets[NUM_THREADS];
-int dead_threads[NUM_THREADS];
+int boolean_dead_threads[NUM_THREADS];
 int current_context;
 int init;
 int active_threads;

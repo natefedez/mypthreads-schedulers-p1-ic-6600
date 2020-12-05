@@ -17,7 +17,7 @@ Copyright (C) 2020 Natan & Kenny
 
     Remember Remember (mypthreads-schedulers-p1-ic-6600)
     Disponible en: https://github.com/natanfdecastro/mypthreads-schedulers-p1-ic-6600
-    
+
     Natan Fernandez de Castro - 2017105774
     Kenneth Rodriguez Murillo - 2018132752
 ========================================================================*/
@@ -30,12 +30,17 @@ Copyright (C) 2020 Natan & Kenny
 #include <stdlib.h>
 #include <time.h>
 #include <string.h>
+#include <ucontext.h>
 
-void my_thread_chsched(char *sched); 
+int active_sched;
 
-void run_threads(); 
+ucontext_t signal_context;
 
-void my_sched_round_robin()
+void my_thread_chsched(char *sched);
+
+void run_threads();
+
+void my_sched_round_robin();
 
 void sched_sort(); //Scheduler de Sorteo
 
