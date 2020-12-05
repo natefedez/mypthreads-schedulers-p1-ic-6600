@@ -28,4 +28,4 @@ Copyright (C) 2020 Natan & Kenny
 #include <stdlib.h>
 #include <curses.h>
 
-void initialize_canvas();
+void *initialize_canvas();

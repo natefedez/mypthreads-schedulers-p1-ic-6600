@@ -29,7 +29,7 @@ Copyright (C) 2020 Natan & Kenny
 
 #include "../config/my_parser.h"
 
-void initialize_canvas(){
+void *initialize_canvas(){
 
   for(int i = 0; i < ITEMS_COUNT; i++){
 
@@ -78,7 +78,7 @@ void initialize_canvas(){
           configuration->item_list[i]->posicion_actual_x--;
 
   }
-  
+
     refresh();
 
     usleep(900000); // Shorter delay between movements
