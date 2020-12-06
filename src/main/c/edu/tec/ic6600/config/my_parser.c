@@ -35,6 +35,7 @@ void my_parser(){
 		tmp_monitor->id = atoi(strtok(fgets(input, 64, ptofile), "-"));
 		tmp_monitor->width_canvas_size = atoi(strtok(NULL, "-"));
 		tmp_monitor->height_canvas_size = atoi(strtok(NULL, "\n"));
+		tmp_monitor->canvas_window = NULL;
 
 		if(configuration->monitors_list->head == NULL){
 			tmp_monitor->prev = NULL;
@@ -51,7 +52,7 @@ void my_parser(){
 		configuration->monitors_list->size += 1;
 	}
 
-	if(strcmp(strtok(fgets(input, 64, ptofile), "\n"), "inicio") == 0){ }
+	if(strcmp(strtok(fgets(input, 64, ptofile), "\n"), "inicio") == 0){
 
 	int index = 0;
 
@@ -67,7 +68,7 @@ void my_parser(){
 
 			item_info *tmp_item = (item_info *) malloc(sizeof(item_info));
 			tmp_item->monitor_id = atoi(strtok(input, "\n"));
-			tmp_item->scheduler = atoi(strtok(input, "\n"));
+			tmp_item->scheduler = atoi(strtok(fgets(input, 64, ptofile), "\n"));
 			for(int i = 0; i<5; i++){
 				tmp_item->ascii_item[i] = (char *) malloc(sizeof(char)+1);
 			}
@@ -86,6 +87,7 @@ void my_parser(){
 			index ++;
 		}
 	}
+}
 
 	configuration->espacio_entre_objetos = atoi(fgets(input, 64, ptofile));
 
