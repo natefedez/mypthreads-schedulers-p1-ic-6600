@@ -40,28 +40,14 @@ int main() {
 
 	create_canvas();
 
-	//printf("%s\n", configuration->protocolo);
-  //printf("%d\n", configuration->monitors_list->head->id);
-	//printf("%d\n", configuration->monitors_list->head->width_canvas_size);
 
-	/*
-	monitor_info *temp_monitor = (monitor_info *) malloc(sizeof(monitor_info));
-  temp_monitor = configuration -> monitors_list -> head;
-
-	printf("error1");
-
-	while(temp_monitor != NULL){
-		*temp_monitor -> canvas_window = create_canvas(temp_monitor -> width_canvas_size, temp_monitor -> height_canvas_size);
-		temp_monitor = temp_monitor -> next;
-	}
-	*/
 	while(configuration->item_list[i] != NULL){
-		printf("va crear un hilo\n");
 		my_thread_create(move_figure, configuration->item_list[i] , 5, 5);
 		i++;
 	}
 	initialize_animation_lock();
 	run_threads();
+
 	//clear_windows();
 
 	return 0;

@@ -56,6 +56,8 @@ typedef struct item_info {
 
   int scheduler;
   int monitor_id;
+  int tiempo_de_inicio;
+  int tiempo_de_fin;
   char *ascii_item[ITEMS_COUNT]; //list of items
   int posicion_actual_x;
   int posicion_actual_y;
@@ -68,9 +70,6 @@ typedef struct item_info {
 }item_info;
 
 typedef struct config {
-
-  int tiempo_de_inicio;
-  int tiempo_de_fin;
   char *protocolo;
   int numero_monitores;
   monitor_queue *monitors_list;

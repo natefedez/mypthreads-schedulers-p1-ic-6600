@@ -11,15 +11,14 @@ void my_parser(){
 	FILE *ptofile = fopen("/home/kenneth//Desktop/mypthreads-schedulers-p1-ic-6600/src/main/resources/config.txt", "r");
 	if(ptofile == NULL) printf("fuuuuuck me\n");
 
-
 	int line = 0;
 
 	char input[64];
 
 	configuration = (config *) malloc(sizeof(config));
 
-	configuration->tiempo_de_inicio = atoi(fgets(input, 64, ptofile));
-	configuration->tiempo_de_fin = atoi(fgets(input, 64, ptofile));
+	//configuration->tiempo_de_inicio = atoi(fgets(input, 64, ptofile));
+	//configuration->tiempo_de_fin = atoi(fgets(input, 64, ptofile));
 	configuration->protocolo = (char *) malloc(sizeof(char));
 	strcpy(configuration->protocolo, strtok(fgets(input, 64, ptofile), "\n"));
 	configuration->numero_monitores = atoi(fgets(input, 64, ptofile));
@@ -69,6 +68,8 @@ void my_parser(){
 			item_info *tmp_item = (item_info *) malloc(sizeof(item_info));
 			tmp_item->monitor_id = atoi(strtok(input, "\n"));
 			tmp_item->scheduler = atoi(strtok(fgets(input, 64, ptofile), "\n"));
+			tmp_item->tiempo_de_inicio = atoi(fgets(input, 64, ptofile)) + time(0);
+			tmp_item->tiempo_de_fin = atoi(strtok(NULL, "-")) + time(0);
 			for(int i = 0; i<5; i++){
 				tmp_item->ascii_item[i] = (char *) malloc(sizeof(char)+1);
 			}

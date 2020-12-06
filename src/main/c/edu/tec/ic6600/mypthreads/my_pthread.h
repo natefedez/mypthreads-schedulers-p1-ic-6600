@@ -35,7 +35,7 @@ Copyright (C) 2020 Natan & Kenny
 
 #define STACK_SIZE 10000
 #define NUM_THREADS 1000
-#define INTERVAL 500
+#define INTERVAL 150
 
 
 

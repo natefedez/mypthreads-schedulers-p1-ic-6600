@@ -80,13 +80,10 @@ static void set_exit_context() {
 
 void set_thread_context(){
 
-	int i;
-
-	printf("settings...\n");
+		int i;
 
 	// Inicializa en 0 los dead_threads
-    for(i = 0; i < NUM_THREADS; i++)
-        boolean_dead_threads[i] = 0;
+    for(i = 0; i < NUM_THREADS; i++) boolean_dead_threads[i] = 0;
 
     set_exit_context();
 

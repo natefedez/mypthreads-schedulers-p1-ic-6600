@@ -26,10 +26,12 @@ Copyright (C) 2020 Natan & Kenny
 #include <stdio.h>
 #include <stdlib.h>
 #include <curses.h>
+#include <time.h>
 #include "../mypthreads/my_mutex.h"
 #include "../config/my_parser.h"
 
 config* configuration;
+clock_t timer;
 int fieldLock;
 
 void initialize_animation_lock(){
@@ -54,74 +56,82 @@ void move_figure(void *arg){
    figure -> posicion_actual_x = figure -> posicion_inicial_x;
    figure -> posicion_actual_y = figure -> posicion_inicial_y;
    my_mutex_unlock(&fieldLock);
+   while(1){
+   if(time(0) < figure -> tiempo_de_inicio){
+     my_thread_yield();
+   }
+   else{
+     while(figure -> posicion_actual_x != figure -> posicion_final_x || figure -> posicion_actual_y != figure -> posicion_final_y) {
 
-  while(figure -> posicion_actual_x != figure -> posicion_final_x || figure -> posicion_actual_y != figure -> posicion_final_y) {
-        //wclear(temp_monitor -> canvas_window); // Clear the screen of all  previously-printed characters
-        if(figure -> posicion_actual_y < figure -> posicion_final_y){
-          mvwprintw(temp_monitor -> canvas_window,figure ->posicion_actual_y-3, figure->posicion_actual_x-1, " ");
-          mvwprintw(temp_monitor -> canvas_window,figure ->posicion_actual_y-3, figure->posicion_actual_x, " ");
-          mvwprintw(temp_monitor -> canvas_window,figure ->posicion_actual_y-3, figure->posicion_actual_x+1, " ");
-          mvwprintw(temp_monitor -> canvas_window,figure ->posicion_actual_y-3, figure->posicion_actual_x+2, " ");
-          mvwprintw(temp_monitor -> canvas_window,figure ->posicion_actual_y-3, figure->posicion_actual_x+3, " ");
-          mvwprintw(temp_monitor -> canvas_window,figure ->posicion_actual_y-3, figure->posicion_actual_x+4, " ");
-          mvwprintw(temp_monitor -> canvas_window,figure ->posicion_actual_y-3, figure->posicion_actual_x+5, " ");
-          mvwprintw(temp_monitor -> canvas_window,figure ->posicion_actual_y-3, figure->posicion_actual_x+6, " ");
-          mvwprintw(temp_monitor -> canvas_window,figure ->posicion_actual_y-3, figure->posicion_actual_x+7, " ");
-          mvwprintw(temp_monitor -> canvas_window,figure ->posicion_actual_y-3, figure->posicion_actual_x+8, " ");
-          mvwprintw(temp_monitor -> canvas_window,figure ->posicion_actual_y-3, figure->posicion_actual_x+9, " ");
-          mvwprintw(temp_monitor -> canvas_window,figure ->posicion_actual_y-3, figure->posicion_actual_x+10, " ");
-        }
-        if(figure -> posicion_actual_x < figure -> posicion_final_x){
-          mvwprintw(temp_monitor -> canvas_window,figure ->posicion_actual_y-2, figure->posicion_actual_x-1, " ");
-          mvwprintw(temp_monitor -> canvas_window,figure ->posicion_actual_y-1, figure->posicion_actual_x-1, " ");
-          mvwprintw(temp_monitor -> canvas_window,figure ->posicion_actual_y, figure->posicion_actual_x-1, " ");
-          mvwprintw(temp_monitor -> canvas_window,figure ->posicion_actual_y+1, figure->posicion_actual_x-1, " ");
-          mvwprintw(temp_monitor -> canvas_window,figure ->posicion_actual_y+2, figure->posicion_actual_x-1, " ");
+          //wclear(temp_monitor -> canvas_window); // Clear the screen of all  previously-printed characters
+          if(figure -> posicion_actual_y <= figure -> posicion_final_y){
+            mvwprintw(temp_monitor -> canvas_window,figure ->posicion_actual_y-3, figure->posicion_actual_x-1, " ");
+            mvwprintw(temp_monitor -> canvas_window,figure ->posicion_actual_y-3, figure->posicion_actual_x, " ");
+            mvwprintw(temp_monitor -> canvas_window,figure ->posicion_actual_y-3, figure->posicion_actual_x+1, " ");
+            mvwprintw(temp_monitor -> canvas_window,figure ->posicion_actual_y-3, figure->posicion_actual_x+2, " ");
+            mvwprintw(temp_monitor -> canvas_window,figure ->posicion_actual_y-3, figure->posicion_actual_x+3, " ");
+            mvwprintw(temp_monitor -> canvas_window,figure ->posicion_actual_y-3, figure->posicion_actual_x+4, " ");
+            mvwprintw(temp_monitor -> canvas_window,figure ->posicion_actual_y-3, figure->posicion_actual_x+5, " ");
+            mvwprintw(temp_monitor -> canvas_window,figure ->posicion_actual_y-3, figure->posicion_actual_x+6, " ");
+            mvwprintw(temp_monitor -> canvas_window,figure ->posicion_actual_y-3, figure->posicion_actual_x+7, " ");
+            mvwprintw(temp_monitor -> canvas_window,figure ->posicion_actual_y-3, figure->posicion_actual_x+8, " ");
+            mvwprintw(temp_monitor -> canvas_window,figure ->posicion_actual_y-3, figure->posicion_actual_x+9, " ");
+            mvwprintw(temp_monitor -> canvas_window,figure ->posicion_actual_y-3, figure->posicion_actual_x+10, " ");
+          }
+          if(figure -> posicion_actual_x <= figure -> posicion_final_x){
+            mvwprintw(temp_monitor -> canvas_window,figure ->posicion_actual_y-2, figure->posicion_actual_x-1, " ");
+            mvwprintw(temp_monitor -> canvas_window,figure ->posicion_actual_y-1, figure->posicion_actual_x-1, " ");
+            mvwprintw(temp_monitor -> canvas_window,figure ->posicion_actual_y, figure->posicion_actual_x-1, " ");
+            mvwprintw(temp_monitor -> canvas_window,figure ->posicion_actual_y+1, figure->posicion_actual_x-1, " ");
+            mvwprintw(temp_monitor -> canvas_window,figure ->posicion_actual_y+2, figure->posicion_actual_x-1, " ");
 
-        }
-        if(figure -> posicion_actual_x > figure -> posicion_final_x){
-          mvwprintw(temp_monitor -> canvas_window,figure ->posicion_actual_y-2, figure->posicion_actual_x+11, " ");
-          mvwprintw(temp_monitor -> canvas_window,figure ->posicion_actual_y-1, figure->posicion_actual_x+11, " ");
-          mvwprintw(temp_monitor -> canvas_window,figure ->posicion_actual_y, figure->posicion_actual_x+11, " ");
-          mvwprintw(temp_monitor -> canvas_window,figure ->posicion_actual_y+1, figure->posicion_actual_x+11, " ");
-          mvwprintw(temp_monitor -> canvas_window,figure ->posicion_actual_y+2, figure->posicion_actual_x+11, " ");
-        }
-        if(figure -> posicion_actual_y > figure -> posicion_final_y){
-          mvwprintw(temp_monitor -> canvas_window,figure ->posicion_actual_y+3, figure->posicion_actual_x-1, " ");
-          mvwprintw(temp_monitor -> canvas_window,figure ->posicion_actual_y+3, figure->posicion_actual_x, " ");
-          mvwprintw(temp_monitor -> canvas_window,figure ->posicion_actual_y+3, figure->posicion_actual_x+1, " ");
-          mvwprintw(temp_monitor -> canvas_window,figure ->posicion_actual_y+3, figure->posicion_actual_x+2, " ");
-          mvwprintw(temp_monitor -> canvas_window,figure ->posicion_actual_y+3, figure->posicion_actual_x+3, " ");
-          mvwprintw(temp_monitor -> canvas_window,figure ->posicion_actual_y+3, figure->posicion_actual_x+4, " ");
-          mvwprintw(temp_monitor -> canvas_window,figure ->posicion_actual_y+3, figure->posicion_actual_x+5, " ");
-          mvwprintw(temp_monitor -> canvas_window,figure ->posicion_actual_y+3, figure->posicion_actual_x+6, " ");
-          mvwprintw(temp_monitor -> canvas_window,figure ->posicion_actual_y+3, figure->posicion_actual_x+7, " ");
-          mvwprintw(temp_monitor -> canvas_window,figure ->posicion_actual_y+3, figure->posicion_actual_x+8, " ");
-          mvwprintw(temp_monitor -> canvas_window,figure ->posicion_actual_y+3, figure->posicion_actual_x+9, " ");
-          mvwprintw(temp_monitor -> canvas_window,figure ->posicion_actual_y+3, figure->posicion_actual_x+10, " ");
-        }
-        mvwprintw(temp_monitor -> canvas_window,figure ->posicion_actual_y-2, figure->posicion_actual_x, figure->ascii_item[0]);
-        mvwprintw(temp_monitor -> canvas_window,figure ->posicion_actual_y-1, figure->posicion_actual_x, figure->ascii_item[1]);
-        mvwprintw(temp_monitor -> canvas_window,figure ->posicion_actual_y, figure->posicion_actual_x, figure->ascii_item[2]);
-        mvwprintw(temp_monitor -> canvas_window,figure ->posicion_actual_y+1, figure->posicion_actual_x, figure->ascii_item[3]);
-        mvwprintw(temp_monitor -> canvas_window,figure ->posicion_actual_y+2, figure->posicion_actual_x, figure->ascii_item[4]);
+          }
+          if(figure -> posicion_actual_x >= figure -> posicion_final_x){
+            mvwprintw(temp_monitor -> canvas_window,figure ->posicion_actual_y-2, figure->posicion_actual_x+11, " ");
+            mvwprintw(temp_monitor -> canvas_window,figure ->posicion_actual_y-1, figure->posicion_actual_x+11, " ");
+            mvwprintw(temp_monitor -> canvas_window,figure ->posicion_actual_y, figure->posicion_actual_x+11, " ");
+            mvwprintw(temp_monitor -> canvas_window,figure ->posicion_actual_y+1, figure->posicion_actual_x+11, " ");
+            mvwprintw(temp_monitor -> canvas_window,figure ->posicion_actual_y+2, figure->posicion_actual_x+11, " ");
+          }
+          if(figure -> posicion_actual_y >= figure -> posicion_final_y){
+            mvwprintw(temp_monitor -> canvas_window,figure ->posicion_actual_y+3, figure->posicion_actual_x-1, " ");
+            mvwprintw(temp_monitor -> canvas_window,figure ->posicion_actual_y+3, figure->posicion_actual_x, " ");
+            mvwprintw(temp_monitor -> canvas_window,figure ->posicion_actual_y+3, figure->posicion_actual_x+1, " ");
+            mvwprintw(temp_monitor -> canvas_window,figure ->posicion_actual_y+3, figure->posicion_actual_x+2, " ");
+            mvwprintw(temp_monitor -> canvas_window,figure ->posicion_actual_y+3, figure->posicion_actual_x+3, " ");
+            mvwprintw(temp_monitor -> canvas_window,figure ->posicion_actual_y+3, figure->posicion_actual_x+4, " ");
+            mvwprintw(temp_monitor -> canvas_window,figure ->posicion_actual_y+3, figure->posicion_actual_x+5, " ");
+            mvwprintw(temp_monitor -> canvas_window,figure ->posicion_actual_y+3, figure->posicion_actual_x+6, " ");
+            mvwprintw(temp_monitor -> canvas_window,figure ->posicion_actual_y+3, figure->posicion_actual_x+7, " ");
+            mvwprintw(temp_monitor -> canvas_window,figure ->posicion_actual_y+3, figure->posicion_actual_x+8, " ");
+            mvwprintw(temp_monitor -> canvas_window,figure ->posicion_actual_y+3, figure->posicion_actual_x+9, " ");
+            mvwprintw(temp_monitor -> canvas_window,figure ->posicion_actual_y+3, figure->posicion_actual_x+10, " ");
+          }
+          mvwprintw(temp_monitor -> canvas_window,figure ->posicion_actual_y-2, figure->posicion_actual_x, figure->ascii_item[0]);
+          mvwprintw(temp_monitor -> canvas_window,figure ->posicion_actual_y-1, figure->posicion_actual_x, figure->ascii_item[1]);
+          mvwprintw(temp_monitor -> canvas_window,figure ->posicion_actual_y, figure->posicion_actual_x, figure->ascii_item[2]);
+          mvwprintw(temp_monitor -> canvas_window,figure ->posicion_actual_y+1, figure->posicion_actual_x, figure->ascii_item[3]);
+          mvwprintw(temp_monitor -> canvas_window,figure ->posicion_actual_y+2, figure->posicion_actual_x, figure->ascii_item[4]);
 
-        my_mutex_lock(&fieldLock);
-        if(figure ->posicion_actual_y < figure->posicion_final_y)
-          figure ->posicion_actual_y++;
-        if(figure ->posicion_actual_x < figure ->posicion_final_x)
-          figure ->posicion_actual_x++;
+          my_mutex_lock(&fieldLock);
+          if(figure ->posicion_actual_y < figure->posicion_final_y)
+            figure ->posicion_actual_y++;
+          if(figure ->posicion_actual_x < figure ->posicion_final_x)
+            figure ->posicion_actual_x++;
 
-        if(figure ->posicion_actual_y > figure ->posicion_final_y)
-          figure ->posicion_actual_y--;
-        if(figure ->posicion_actual_x > figure ->posicion_final_x)
-          figure ->posicion_actual_x--;
-        my_mutex_unlock(&fieldLock);
+          if(figure ->posicion_actual_y > figure ->posicion_final_y)
+            figure ->posicion_actual_y--;
+          if(figure ->posicion_actual_x > figure ->posicion_final_x)
+            figure ->posicion_actual_x--;
+          my_mutex_unlock(&fieldLock);
 
-    wrefresh(temp_monitor-> canvas_window);
+      wrefresh(temp_monitor-> canvas_window);
 
-    usleep(900000); // Shorter delay between movements
+      usleep(900000); // Shorter delay between movements
+    }
+    break;
   }
+}
 }
 
 /*
