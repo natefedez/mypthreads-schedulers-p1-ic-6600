@@ -30,8 +30,8 @@ Copyright (C) 2020 Natan & Kenny
 
 config* configuration;
 
-void *move_figure(void *arg){
-
+void move_figure(void *arg){
+  printf("llego\n");
    item_info *figure = (item_info *) arg;
 
    monitor_info *temp_monitor = (monitor_info *) malloc(sizeof(monitor_info));
@@ -40,21 +40,14 @@ void *move_figure(void *arg){
    while(temp_monitor -> id != figure -> monitor_id){
      temp_monitor = temp_monitor -> next;
    }
-
   while(figure -> posicion_actual_x != figure -> posicion_final_x && figure -> posicion_actual_y != figure -> posicion_final_y) {
     clear(); // Clear the screen of all
     // previously-printed characters
-
-        wmove(temp_monitor -> canvas_window, figure -> posicion_actual_y-2,figure -> posicion_actual_x);
-        waddstr(temp_monitor -> canvas_window, figure ->ascii_item[0]);
-        wmove(temp_monitor -> canvas_window, figure -> posicion_actual_y-1, figure -> posicion_actual_x);
-        waddstr(temp_monitor -> canvas_window, figure ->ascii_item[1]);
-        wmove(temp_monitor -> canvas_window, figure -> posicion_actual_y, figure -> posicion_actual_x);
-        waddstr(temp_monitor -> canvas_window, figure ->ascii_item[2]);
-        wmove(temp_monitor -> canvas_window, figure -> posicion_actual_y+1, figure -> posicion_actual_x);
-        waddstr(temp_monitor -> canvas_window, figure ->ascii_item[3]);
-        wmove(temp_monitor -> canvas_window, figure -> posicion_actual_y+2, figure -> posicion_actual_x);
-        waddstr(temp_monitor -> canvas_window, figure ->ascii_item[4]);
+        mvwprintw(temp_monitor -> canvas_window,figure ->posicion_actual_y-2, figure->posicion_actual_x, figure->ascii_item[0]);
+        mvwprintw(temp_monitor -> canvas_window,figure ->posicion_actual_y-1, figure->posicion_actual_x, figure->ascii_item[1]);
+        mvwprintw(temp_monitor -> canvas_window,figure ->posicion_actual_y, figure->posicion_actual_x, figure->ascii_item[2]);
+        mvwprintw(temp_monitor -> canvas_window,figure ->posicion_actual_y+1, figure->posicion_actual_x, figure->ascii_item[3]);
+        mvwprintw(temp_monitor -> canvas_window,figure ->posicion_actual_y+2, figure->posicion_actual_x, figure->ascii_item[4]);
 
         if(figure ->posicion_actual_y < figure->posicion_final_y)
           figure ->posicion_actual_y++;

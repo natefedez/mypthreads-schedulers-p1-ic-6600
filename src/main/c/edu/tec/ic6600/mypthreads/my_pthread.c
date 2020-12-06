@@ -51,6 +51,7 @@ void run_threads(){
 
 static void execute_exit_context(){
 
+		printf("is executing the exit context\n");
     boolean_dead_threads[current_context] = 1;
     total_tickets -= tickets[current_context];
     active_threads_aux--;
@@ -63,7 +64,7 @@ static void execute_exit_context(){
 static void set_exit_context() {
 
 	static int exit_context_created;
-
+	printf("The value in exit context created is %d\n",exit_context_created);
     if(!exit_context_created){
 
         getcontext(&exit_context);
@@ -77,18 +78,22 @@ static void set_exit_context() {
 
         exit_context_created = 1;
     }
-
+		printf("The value in exit context created is now %d\n",exit_context_created);
 }
 
 void set_thread_context(){
 
 	int i;
 
+	printf("settings...\n");
+
 	// Inicializa en 0 los dead_threads
     for(i = 0; i < NUM_THREADS; i++)
         boolean_dead_threads[i] = 0;
 
     set_exit_context();
+
+		printf("after setting the exit context\n");
 
     struct itimerval it;
 
@@ -127,7 +132,7 @@ void set_thread_context(){
 //	return 0;
 //}
 
-void my_thread_create(void *dont_kill_the_funk, void *args, int tickets_s, int priority_s){
+void my_thread_create(void (*dont_kill_the_funk) (), void *args, int tickets_s, int priority_s){
 
 	/*
 	Recibe:
@@ -143,6 +148,7 @@ void my_thread_create(void *dont_kill_the_funk, void *args, int tickets_s, int p
 	// https://www.unix.com/man-page/linux/7posix/ucontext.h/
 		if (!init) {
 			set_thread_context();
+			init++;
 		}
 
 		// https://www.unix.com/man-page/linux/2/sigaltstack/
@@ -166,8 +172,9 @@ void my_thread_create(void *dont_kill_the_funk, void *args, int tickets_s, int p
     sigemptyset(&thread -> uc_sigmask);
 
     // Se manda la funcion al context
-    makecontext(thread, dont_kill_the_funk, 1, args);
-
+		printf("was here\n");
+    makecontext(thread,(void (*)(void))dont_kill_the_funk, 1, args);
+		printf("also here\n");
     tickets[active_threads] = tickets_s;
     priority[active_threads] = priority_s;
     total_tickets += tickets_s;

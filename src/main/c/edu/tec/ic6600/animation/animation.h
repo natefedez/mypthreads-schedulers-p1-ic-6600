@@ -27,4 +27,4 @@ Copyright (C) 2020 Natan & Kenny
 #include <stdlib.h>
 #include <curses.h>
 
-void *move_figure(void *arg);
+void move_figure(void *arg);

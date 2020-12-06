@@ -41,7 +41,7 @@ Copyright (C) 2020 Natan & Kenny
 
 // Funciones a extender
 
-void my_thread_create(void *dont_kill_the_funk, void *args, int tickets, int priority);
+void my_thread_create(void (*dont_kill_the_funk) (), void *args, int tickets, int priority);
 
 void my_thread_end();
 

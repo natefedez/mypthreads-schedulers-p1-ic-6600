@@ -46,9 +46,10 @@ void create_canvas(){
 	}
   //printf("se ha creado el canvas con %d filas y %d columnas\n",height_canvas_size, width_canvas_size);
 }
-/*
-void *initialize_canvas(){
 
+void initialize_canvas(){
+
+  printf("prapra\n");
   for(int i = 0; i < ITEMS_COUNT; i++){
 
     if(configuration->item_list[i] == NULL) break;
@@ -106,4 +107,3 @@ void *initialize_canvas(){
 
 
 }
-*/
