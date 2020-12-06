@@ -31,14 +31,14 @@ void my_thread_end(){
     total_tickets-=tickets[current_context];
     active_threads_aux--;
 
-    //timer_interrupt();
+    timer_interrupt();
 
 }
 
 
 void my_thread_yield(){
 
-	//timer_interrupt();
+		timer_interrupt();
 }
 
 void run_threads(){
@@ -51,7 +51,6 @@ void run_threads(){
 
 static void execute_exit_context(){
 
-		printf("is executing the exit context\n");
     boolean_dead_threads[current_context] = 1;
     total_tickets -= tickets[current_context];
     active_threads_aux--;
@@ -64,7 +63,6 @@ static void execute_exit_context(){
 static void set_exit_context() {
 
 	static int exit_context_created;
-	printf("The value in exit context created is %d\n",exit_context_created);
     if(!exit_context_created){
 
         getcontext(&exit_context);
@@ -78,7 +76,6 @@ static void set_exit_context() {
 
         exit_context_created = 1;
     }
-		printf("The value in exit context created is now %d\n",exit_context_created);
 }
 
 void set_thread_context(){
@@ -92,8 +89,6 @@ void set_thread_context(){
         boolean_dead_threads[i] = 0;
 
     set_exit_context();
-
-		printf("after setting the exit context\n");
 
     struct itimerval it;
 
@@ -172,9 +167,7 @@ void my_thread_create(void (*dont_kill_the_funk) (), void *args, int tickets_s, 
     sigemptyset(&thread -> uc_sigmask);
 
     // Se manda la funcion al context
-		printf("was here\n");
     makecontext(thread,(void (*)(void))dont_kill_the_funk, 1, args);
-		printf("also here\n");
     tickets[active_threads] = tickets_s;
     priority[active_threads] = priority_s;
     total_tickets += tickets_s;

@@ -17,7 +17,7 @@ Copyright (C) 2020 Natan & Kenny
 
     Remember Remember (mypthreads-schedulers-p1-ic-6600)
     Disponible en: https://github.com/natanfdecastro/mypthreads-schedulers-p1-ic-6600
-    
+
     Natan Fernandez de Castro - 2017105774
     Kenneth Rodriguez Murillo - 2018132752
 ========================================================================*/
@@ -27,12 +27,12 @@ Copyright (C) 2020 Natan & Kenny
 #include "my_mutex.h"
 
 
-void my_mutex_init(my_mutex *lock){
+void my_mutex_init(int *lock){
 
     lock = 0;
 }
 
-int atomic_xchg(my_mutex *lock){
+int atomic_xchg(int *lock){
 
     // https://stackoverflow.com/questions/28968552/spin-lock-using-xchg
 
@@ -42,21 +42,21 @@ int atomic_xchg(my_mutex *lock){
         : "=r"(tmp), "+m"(*lock)
         : "0"(tmp)
         :"memory");
-    return tmp; 
+    return tmp;
 }
 
-int test_and_set(my_mutex *lock){
+int test_and_set(int *lock){
 
     return atomic_xchg(lock);
 }
 
 
-void my_mutex_destroy(my_mutex *lock) {
+void my_mutex_destroy(int *lock) {
 
     //free(lock);
 }
 
-void my_mutex_lock(my_mutex *lock) {
+void my_mutex_lock(int *lock) {
 
     while (*lock){
         sleep(1);
@@ -64,7 +64,7 @@ void my_mutex_lock(my_mutex *lock) {
     test_and_set(lock);
 }
 
-void my_mutex_unlock(my_mutex *lock) {
+void my_mutex_unlock(int *lock) {
 
     // https://stackoverflow.com/questions/28968552/spin-lock-using-xchg
 
@@ -76,7 +76,7 @@ void my_mutex_unlock(my_mutex *lock) {
         :"memory");
 }
 
-void my_mutex_trylock(my_mutex *lock) {
+void my_mutex_trylock(int *lock) {
 
     while (*lock){
         usleep(1000);

@@ -46,64 +46,13 @@ void create_canvas(){
 	}
   //printf("se ha creado el canvas con %d filas y %d columnas\n",height_canvas_size, width_canvas_size);
 }
+/*
+void clear_windows(){
+  monitor_info *temp_monitor = (monitor_info *) malloc(sizeof(monitor_info));
+  temp_monitor = configuration -> monitors_list -> head;
 
-void initialize_canvas(){
-
-  printf("prapra\n");
-  for(int i = 0; i < ITEMS_COUNT; i++){
-
-    if(configuration->item_list[i] == NULL) break;
-
-    printf("%d\n", configuration->item_list[i]->posicion_inicial_x);
-    printf("%d\n", configuration->item_list[i]->posicion_inicial_y);
-    printf("%d\n", configuration->item_list[i]->posicion_final_x);
-    printf("%d\n", configuration->item_list[i]->posicion_final_y);
-    printf("%d\n", configuration->item_list[i]->angulo);
-
-    configuration->item_list[i]->posicion_actual_x = configuration->item_list[i]->posicion_inicial_x;
-    configuration->item_list[i]->posicion_actual_y = configuration->item_list[i]->posicion_inicial_y;
-
-  }
-
-
-  int x = 0, y = 0;
-  initscr();
-  noecho();
-  curs_set(FALSE);
-
-
-
-  while(1) {
-    clear(); // Clear the screen of all
-    // previously-printed characters
-
-  for(int i = 0; i < ITEMS_COUNT; i++){
-    if(configuration->item_list[i] == NULL) break;
-
-        mvprintw(configuration->item_list[i]->posicion_actual_y-2, configuration->item_list[i]->posicion_actual_x, configuration->item_list[i]->ascii_item[0]);
-        mvprintw(configuration->item_list[i]->posicion_actual_y-1, configuration->item_list[i]->posicion_actual_x, configuration->item_list[i]->ascii_item[1]);
-        mvprintw(configuration->item_list[i]->posicion_actual_y, configuration->item_list[i]->posicion_actual_x, configuration->item_list[i]->ascii_item[2]);
-        mvprintw(configuration->item_list[i]->posicion_actual_y+1, configuration->item_list[i]->posicion_actual_x, configuration->item_list[i]->ascii_item[3]);
-        mvprintw(configuration->item_list[i]->posicion_actual_y+2, configuration->item_list[i]->posicion_actual_x, configuration->item_list[i]->ascii_item[4]);
-
-        if(configuration->item_list[i]->posicion_actual_y < configuration->item_list[i]->posicion_final_y)
-          configuration->item_list[i]->posicion_actual_y++;
-        if(configuration->item_list[i]->posicion_actual_x < configuration->item_list[i]->posicion_final_x)
-          configuration->item_list[i]->posicion_actual_x++;
-
-        if(configuration->item_list[i]->posicion_actual_y > configuration->item_list[i]->posicion_final_y)
-          configuration->item_list[i]->posicion_actual_y--;
-        if(configuration->item_list[i]->posicion_actual_x > configuration->item_list[i]->posicion_final_x)
-          configuration->item_list[i]->posicion_actual_x--;
-
-  }
-
-    refresh();
-
-    usleep(900000); // Shorter delay between movements
-    x++; // Advance the ball to the right
-    y++;
-  }
-
-
-}
+	while(temp_monitor != NULL){
+		wclear(temp_monitor -> canvas_window);
+		temp_monitor = temp_monitor -> next;
+	}
+}*/

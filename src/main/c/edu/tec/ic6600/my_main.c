@@ -38,7 +38,7 @@ int main() {
 
 	int i = 0;
 
-	//create_canvas();
+	create_canvas();
 
 	//printf("%s\n", configuration->protocolo);
   //printf("%d\n", configuration->monitors_list->head->id);
@@ -57,10 +57,12 @@ int main() {
 	*/
 	while(configuration->item_list[i] != NULL){
 		printf("va crear un hilo\n");
-		my_thread_create(initialize_canvas, NULL , 5, 5);
+		my_thread_create(move_figure, configuration->item_list[i] , 5, 5);
 		i++;
 	}
-	//initialize_canvas();
+	initialize_animation_lock();
+	run_threads();
+	//clear_windows();
 
 	return 0;
 
