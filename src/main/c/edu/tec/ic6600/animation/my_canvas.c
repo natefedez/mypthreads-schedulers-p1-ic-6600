@@ -26,9 +26,27 @@ Copyright (C) 2020 Natan & Kenny
 #include <stdio.h>
 #include <stdlib.h>
 #include <curses.h>
-
 #include "../config/my_parser.h"
 
+config* configuration;
+
+void create_canvas(){
+
+  int x = 0, y = 0;
+  initscr();
+  noecho();
+  curs_set(FALSE);
+
+  monitor_info *temp_monitor = (monitor_info *) malloc(sizeof(monitor_info));
+  temp_monitor = configuration -> monitors_list -> head;
+
+	while(temp_monitor != NULL){
+		temp_monitor -> canvas_window = newwin(temp_monitor -> height_canvas_size,temp_monitor -> width_canvas_size, y, x);
+		temp_monitor = temp_monitor -> next;
+	}
+  //printf("se ha creado el canvas con %d filas y %d columnas\n",height_canvas_size, width_canvas_size);
+}
+/*
 void *initialize_canvas(){
 
   for(int i = 0; i < ITEMS_COUNT; i++){
@@ -88,3 +106,4 @@ void *initialize_canvas(){
 
 
 }
+*/

@@ -26,6 +26,7 @@ Copyright (C) 2020 Natan & Kenny
 
 #include <stdio.h>
 #include <stdlib.h>
+#include <curses.h>
 
 #define ITEMS_COUNT 10
 
@@ -36,6 +37,7 @@ typedef struct monitor_info {
   int id;  //monitor id
   int width_canvas_size; //monitor width_canvas_size
   int height_canvas_size; //monitor height_canvas_size
+  WINDOW *canvas_window;
   struct monitor_info *prev, *next;
 
 }monitor_info;
@@ -52,7 +54,8 @@ typedef struct monitor_queue {
 /* The monitor information for the animation */
 typedef struct item_info {
 
-  int scheduler;  //monitor id
+  int scheduler;
+  int monitor_id;
   char *ascii_item[ITEMS_COUNT]; //list of items
   int posicion_actual_x;
   int posicion_actual_y;

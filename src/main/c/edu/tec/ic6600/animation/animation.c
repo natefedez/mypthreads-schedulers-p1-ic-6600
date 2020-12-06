@@ -17,7 +17,7 @@ Copyright (C) 2020 Natan & Kenny
 
     Remember Remember (mypthreads-schedulers-p1-ic-6600)
     Disponible en: https://github.com/natanfdecastro/mypthreads-schedulers-p1-ic-6600
-    
+
     Natan Fernandez de Castro - 2017105774
     Kenneth Rodriguez Murillo - 2018132752
 ========================================================================*/
@@ -25,11 +25,55 @@ Copyright (C) 2020 Natan & Kenny
 
 #include <stdio.h>
 #include <stdlib.h>
+#include <curses.h>
+#include "../config/my_parser.h"
+
+config* configuration;
+
+void *move_figure(void *arg){
+
+   item_info *figure = (item_info *) arg;
+
+   monitor_info *temp_monitor = (monitor_info *) malloc(sizeof(monitor_info));
+   temp_monitor = configuration -> monitors_list -> head;
+
+   while(temp_monitor -> id != figure -> monitor_id){
+     temp_monitor = temp_monitor -> next;
+   }
+
+  while(figure -> posicion_actual_x != figure -> posicion_final_x && figure -> posicion_actual_y != figure -> posicion_final_y) {
+    clear(); // Clear the screen of all
+    // previously-printed characters
+
+        wmove(temp_monitor -> canvas_window, figure -> posicion_actual_y-2,figure -> posicion_actual_x);
+        waddstr(temp_monitor -> canvas_window, figure ->ascii_item[0]);
+        wmove(temp_monitor -> canvas_window, figure -> posicion_actual_y-1, figure -> posicion_actual_x);
+        waddstr(temp_monitor -> canvas_window, figure ->ascii_item[1]);
+        wmove(temp_monitor -> canvas_window, figure -> posicion_actual_y, figure -> posicion_actual_x);
+        waddstr(temp_monitor -> canvas_window, figure ->ascii_item[2]);
+        wmove(temp_monitor -> canvas_window, figure -> posicion_actual_y+1, figure -> posicion_actual_x);
+        waddstr(temp_monitor -> canvas_window, figure ->ascii_item[3]);
+        wmove(temp_monitor -> canvas_window, figure -> posicion_actual_y+2, figure -> posicion_actual_x);
+        waddstr(temp_monitor -> canvas_window, figure ->ascii_item[4]);
+
+        if(figure ->posicion_actual_y < figure->posicion_final_y)
+          figure ->posicion_actual_y++;
+        if(figure ->posicion_actual_x < figure ->posicion_final_x)
+          figure ->posicion_actual_x++;
+
+        if(figure ->posicion_actual_y > figure ->posicion_final_y)
+          figure ->posicion_actual_y--;
+        if(figure ->posicion_actual_x > figure ->posicion_final_x)
+          figure ->posicion_actual_x--;
 
 
+    wrefresh(temp_monitor-> canvas_window);
 
-my_mutex field_lock;
+    usleep(900000); // Shorter delay between movements
+  }
+}
 
+/*
 my_animation(){
 
     int x_axis_size = 0, int y_axis_size = 0;
@@ -40,5 +84,6 @@ my_animation(){
 
     printf(">>> Digite tiempo inicial y final: ");
     scanf("%d %d", initial_time, ending_time);
-    
+
 }
+*/

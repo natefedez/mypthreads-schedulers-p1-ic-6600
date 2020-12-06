@@ -66,8 +66,8 @@ void my_parser(){
 		else{
 
 			item_info *tmp_item = (item_info *) malloc(sizeof(item_info));
+			tmp_item->monitor_id = atoi(strtok(input, "\n"));
 			tmp_item->scheduler = atoi(strtok(input, "\n"));
-
 			for(int i = 0; i<5; i++){
 				tmp_item->ascii_item[i] = (char *) malloc(sizeof(char)+1);
 			}
