@@ -36,7 +36,7 @@ int active_sched;
 
 ucontext_t signal_context;
 
-void my_thread_chsched(char *sched);
+void my_thread_chsched(int new_sched);
 
 void run_threads();
 

@@ -35,16 +35,15 @@ Copyright (C) 2020 Natan & Kenny
 
 // Documentar
 
-void my_thread_chsched(char *sched){
+int alternate;
 
-    if(!strcmp(sched, "round_robin"))
-        active_sched = 0;
+void my_thread_chsched(int new_sched){
 
-    if(!strcmp(sched, "sort"))
-        active_sched = 1;
+    if(new_sched == 0) active_sched = 0;
 
-    if(!strcmp(sched, "real_time"))
-        active_sched = 2;
+    if(new_sched == 1) active_sched = 1;
+
+    if(new_sched == 2) active_sched = 2;
 }
 
 void my_sched_round_robin(){
@@ -150,6 +149,8 @@ void my_sched_real_time(){
 
 void timer_interrupt(){
 
+    alternate = 0;
+
     getcontext(&signal_context);
 
     signal_context.uc_stack.ss_sp = signal_stack;
@@ -157,6 +158,14 @@ void timer_interrupt(){
     signal_context.uc_stack.ss_flags = 0;
 
     sigemptyset(&signal_context.uc_sigmask);
+
+    alternate = alternate^active_sched;
+
+    my_thread_chsched(alternate);
+
+    if(active_sched == 0) active_sched++;
+
+    if(active_sched == 1) active_sched--;
 
     if(active_sched == 0){makecontext(&signal_context, my_sched_round_robin, 1);}
 
