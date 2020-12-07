@@ -27,21 +27,42 @@ Copyright (C) 2020 Natan & Kenny
 
 void my_thread_end(){
 
-		boolean_dead_threads[current_context] = 1;
+    /*
+    Funcion que se encarga de finalizar un hilo
+    Entradas: Ninguna
+    Restricciones: Ninguna
+    Salidas: Llamada a funcion sched_alternator() para cambio de schedule
+    */
+
+	boolean_dead_threads[current_context] = 1;
     total_tickets-=tickets[current_context];
     active_threads_aux--;
 
-    //timer_interrupt();
+    sched_alternator();
 
 }
 
 
 void my_thread_yield(){
 
-	//timer_interrupt();
+    /*
+    Funcion que se encarga de ceder el procesador
+    Entradas: Ninguna
+    Restricciones: Ninguna
+    Salidas: Llamada a funcion sched_alternator()
+    */
+
+	sched_alternator();
 }
 
 void run_threads(){
+
+    /*
+    Funcion que se encarga de correr los threads creados
+    Entradas: Ninguna
+    Restricciones: Ninguna
+    Salidas: Hilos ejecutados
+    */
 
     current_thread = &threads[0];
 
@@ -51,19 +72,32 @@ void run_threads(){
 
 static void execute_exit_context(){
 
+    /*
+    Funcion que se encarga de terminar los hilos, cede el procesador
+    Entradas: Ninguna
+    Restricciones: Ninguna
+    Salidas: Cambio de schedule
+    */
+
     boolean_dead_threads[current_context] = 1;
     total_tickets -= tickets[current_context];
     active_threads_aux--;
 
-    timer_interrupt();
+    sched_alternator();
 
     while(1);
 }
 
 static void set_exit_context() {
 
-	static int exit_context_created;
+    /*
+    Funcion que se encarga de crear un contexto en la funcion exit_context()
+    Entradas: Ninguna
+    Restricciones: Ninguna
+    Salidas: Llamada a makecontext
+    */
 
+	static int exit_context_created;
     if(!exit_context_created){
 
         getcontext(&exit_context);
@@ -77,31 +111,39 @@ static void set_exit_context() {
 
         exit_context_created = 1;
     }
-
 }
 
 void set_thread_context(){
 
-	int i;
+    /*
+    Funcion que se encarga de inicializa el arreglo de hilos muertos o finalizados. 
+    Fija el tiempo a utilizar por el scheduler para el quantum.
+    Entradas: Ninguna
+    Restricciones: Ninguna
+    Salidas: Tiempo fijado para el quantum
+    */
+
+		int i;
 
 	// Inicializa en 0 los dead_threads
-    for(i = 0; i < NUM_THREADS; i++)
-        boolean_dead_threads[i] = 0;
+    for(i = 0; i < NUM_THREADS; i++) boolean_dead_threads[i] = 0;
 
     set_exit_context();
-
+    
+    // Struct necesario para la creacion del quantum
     struct itimerval it;
 
     signal_stack = malloc(STACK_SIZE);
 
     it.it_interval.tv_sec = 0;
-    it.it_interval.tv_usec = INTERVAL * 1000;
-    it.it_value = it.it_interval;
+    it.it_interval.tv_usec = INTERVAL * 1000; // Indica el tiempo de milisegundos 
+                                              // para intervales de ejecucion
+    it.it_value = it.it_interval; // Se asigna el valor
 
     setitimer(ITIMER_REAL, &it, NULL);
 
     struct sigaction act;
-    act.sa_sigaction = timer_interrupt;
+    act.sa_sigaction = sched_alternator;
 
     sigemptyset(&act.sa_mask);
     act.sa_flags = SA_RESTART | SA_SIGINFO;
@@ -114,20 +156,36 @@ void set_thread_context(){
 
 }
 
-// TODO
-//void my_thread_join(){
+void my_thread_join(ucontext_t *active_thread,ucontext_t *waiting_thread){
 
-//	return 0;
-//}
+    /*
+    Funcion que se encarga de abrir una cola de espera para determinado hilo
+    Entradas: Dos, el hilo actual y el que está en espera
+    Restricciones: Ninguna
+    Salidas: Ninguna
+    */
 
-// TODO
-//void my_thread_detach(){
+		active_thread -> uc_link = waiting_thread;
+		//setcontext(active_thread);
+
+}
 
 
-//	return 0;
-//}
+void my_thread_detach(ucontext_t *thread_to_detach){
 
-void my_thread_create(void *dont_kill_the_funk, void *args, int tickets_s, int priority_s){
+    /*
+    Funcion que se encarga de abrir el entorno para un hilo sin importar que recurso utilizando
+    Entradas: El hilo a dar independencia
+    Restricciones: Ninguna
+    Salidas: Hilo liberado de memoria
+    */
+
+		setcontext(thread_to_detach);
+		free(thread_to_detach);
+
+}
+
+void my_thread_create(void (*dont_kill_the_funk) (), void *args, int tickets_s, int priority_s){
 
 	/*
 	Recibe:
@@ -143,6 +201,7 @@ void my_thread_create(void *dont_kill_the_funk, void *args, int tickets_s, int p
 	// https://www.unix.com/man-page/linux/7posix/ucontext.h/
 		if (!init) {
 			set_thread_context();
+			init++;
 		}
 
 		// https://www.unix.com/man-page/linux/2/sigaltstack/
@@ -166,8 +225,8 @@ void my_thread_create(void *dont_kill_the_funk, void *args, int tickets_s, int p
     sigemptyset(&thread -> uc_sigmask);
 
     // Se manda la funcion al context
-    makecontext(thread, dont_kill_the_funk, 1, args);
-
+    makecontext(thread,(void (*)(void))dont_kill_the_funk, 1, args);
+    
     tickets[active_threads] = tickets_s;
     priority[active_threads] = priority_s;
     total_tickets += tickets_s;

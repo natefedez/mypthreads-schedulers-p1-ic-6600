@@ -35,13 +35,13 @@ Copyright (C) 2020 Natan & Kenny
 
 #define STACK_SIZE 10000
 #define NUM_THREADS 1000
-#define INTERVAL 1000
+#define INTERVAL 150
 
 
 
 // Funciones a extender
 
-void my_thread_create(void *dont_kill_the_funk, void *args, int tickets, int priority);
+void my_thread_create(void (*dont_kill_the_funk) (), void *args, int tickets, int priority);
 
 void my_thread_end();
 

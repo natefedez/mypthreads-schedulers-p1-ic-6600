@@ -24,6 +24,7 @@ Copyright (C) 2020 Natan & Kenny
 
 #include "config/my_parser.h"
 #include "animation/my_canvas.h"
+#include "animation/animation.h"
 #include "mypthreads/my_pthread.h"
 
 #include <stdio.h>
@@ -35,17 +36,19 @@ int main() {
 
 	my_parser();
 
-	int i;
+	int i = 0;
 
-	//printf("%s\n", configuration->protocolo);
-  //printf("%d\n", configuration->monitors_list->head->id);
-	//printf("%d\n", configuration->monitors_list->head->width_canvas_size);
+	create_canvas();
 
-	for(i = 0; i < ITEMS_COUNT; i ++){
-		my_thread_create(initialize_canvas, NULL, 5, 5);
+
+	while(configuration->item_list[i] != NULL){
+		my_thread_create(move_figure, configuration->item_list[i] , 5, 5);
+		i++;
 	}
-	initialize_canvas();
+	initialize_animation_lock();
+	run_threads();
 
+	//clear_windows();
 
 	return 0;
 

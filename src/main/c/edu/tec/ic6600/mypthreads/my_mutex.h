@@ -17,12 +17,11 @@ Copyright (C) 2020 Natan & Kenny
 
     Remember Remember (mypthreads-schedulers-p1-ic-6600)
     Disponible en: https://github.com/natanfdecastro/mypthreads-schedulers-p1-ic-6600
-    
+
     Natan Fernandez de Castro - 2017105774
     Kenneth Rodriguez Murillo - 2018132752
 ========================================================================*/
 
-#ifndef my_mutex_h
 #define my_mutex_h
 
 #include <stdio.h>
@@ -30,14 +29,12 @@ Copyright (C) 2020 Natan & Kenny
 
 // Funciones a extender
 
-void my_mutex_init(my_mutex *lock); 
+void my_mutex_init(int *lock);
 
-void my_mutex_destroy(my_mutex *lock); 
+void my_mutex_destroy(int *lock);
 
-void my_mutex_lock(my_mutex *lock); 
+void my_mutex_lock(int *lock);
 
-void my_mutex_unlock(my_mutex *lock); 
+void my_mutex_unlock(int *lock);
 
-void my_mutex_trylock(my_mutex *lock); 
-
-#endif
+void my_mutex_trylock(int *lock);
