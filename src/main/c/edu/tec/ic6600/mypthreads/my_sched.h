@@ -46,6 +46,6 @@ void sched_sort(); //Scheduler de Sorteo
 
 void my_sched_real_time(); //Scheduler de Tiempo real
 
-void timer_interrupt(); //Crea el context segun el tipo de scheduler
+void sched_alternator(); //Crea el context segun el tipo de scheduler
 
 #endif

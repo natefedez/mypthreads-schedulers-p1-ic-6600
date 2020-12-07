@@ -147,9 +147,7 @@ void my_sched_real_time(){
 }
 
 
-void timer_interrupt(){
-
-    alternate = 0;
+void sched_alternator(){
 
     getcontext(&signal_context);
 
@@ -159,13 +157,11 @@ void timer_interrupt(){
 
     sigemptyset(&signal_context.uc_sigmask);
 
+    alternate = 0;
+
     alternate = alternate^active_sched;
 
     my_thread_chsched(alternate);
-
-    if(active_sched == 0) active_sched++;
-
-    if(active_sched == 1) active_sched--;
 
     if(active_sched == 0){makecontext(&signal_context, my_sched_round_robin, 1);}
 

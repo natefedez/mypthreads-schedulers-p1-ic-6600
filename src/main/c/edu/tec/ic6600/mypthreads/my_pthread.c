@@ -31,14 +31,14 @@ void my_thread_end(){
     total_tickets-=tickets[current_context];
     active_threads_aux--;
 
-    timer_interrupt();
+    sched_alternator();
 
 }
 
 
 void my_thread_yield(){
 
-		timer_interrupt();
+		sched_alternator();
 }
 
 void run_threads(){
@@ -55,7 +55,7 @@ static void execute_exit_context(){
     total_tickets -= tickets[current_context];
     active_threads_aux--;
 
-    timer_interrupt();
+    sched_alternator();
 
     while(1);
 }
@@ -98,7 +98,7 @@ void set_thread_context(){
     setitimer(ITIMER_REAL, &it, NULL);
 
     struct sigaction act;
-    act.sa_sigaction = timer_interrupt;
+    act.sa_sigaction = sched_alternator;
 
     sigemptyset(&act.sa_mask);
     act.sa_flags = SA_RESTART | SA_SIGINFO;
@@ -111,18 +111,20 @@ void set_thread_context(){
 
 }
 
-// TODO
-//void my_thread_join(){
+void my_thread_join(ucontext_t *active_thread,ucontext_t *waiting_thread){
 
-//	return 0;
-//}
+		active_thread -> uc_link = waiting_thread;
+		//setcontext(active_thread);
 
-// TODO
-//void my_thread_detach(){
+}
 
 
-//	return 0;
-//}
+void my_thread_detach(ucontext_t *thread_to_detach){
+
+		setcontext(thread_to_detach);
+		free(thread_to_detach);
+
+}
 
 void my_thread_create(void (*dont_kill_the_funk) (), void *args, int tickets_s, int priority_s){
 
