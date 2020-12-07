@@ -29,12 +29,26 @@ Copyright (C) 2020 Natan & Kenny
 
 void my_mutex_init(int *lock){
 
+    /*
+    Funcion que se encarga de inicializar el lock
+    Entradas: Puntero al lock que se va a utilizar
+    Restricciones: Ninguna
+    Salidas: Valor del lock modificado
+    */
+
     lock = 0;
 }
 
 int atomic_xchg(int *lock){
 
-    // https://stackoverflow.com/questions/28968552/spin-lock-using-xchg
+    /*
+    Funcion que se encarga de realizar guardar un nuevo valor en la variable deseada
+    y lo retorna atomicamente seguro
+    Entradas: Puntero al lock que se va a utilizar
+    Restricciones: Ninguna
+    Salidas: Valor del lock invertido 
+    https://stackoverflow.com/questions/28968552/spin-lock-using-xchg
+    */
 
     unsigned int  tmp = 1;
     __asm__(
@@ -47,16 +61,38 @@ int atomic_xchg(int *lock){
 
 int test_and_set(int *lock){
 
+    /*
+    Funcion que se encarga de llamar a la funcion de atomic_exchange
+    Entradas: Puntero al lock que se va a utilizar
+    Restricciones: Ninguna
+    Salidas: Llamada a funcion atomic_exchange
+    */
+
     return atomic_xchg(lock);
 }
 
 
 void my_mutex_destroy(int *lock) {
 
-    //free(lock);
+    /*
+    Funcion que se encarga de destruir el mutex
+    Entradas: Puntero al lock que se va a utilizar
+    Restricciones: Ninguna
+    Salidas: Memoria ocupada por el lock liberada
+    */
+
+    free(lock);
 }
 
 void my_mutex_lock(int *lock) {
+
+    /*
+    Funcion que se encarga de que solo el thread que llama a esta funcion
+    pueda usar las variables hasta que se desbloquee
+    Entradas: Puntero al lock que se va a utilizar
+    Restricciones: Ninguna
+    Salidas: Valor del lock cambiado
+    */
 
     while (*lock){
         sleep(1);
@@ -66,7 +102,14 @@ void my_mutex_lock(int *lock) {
 
 void my_mutex_unlock(int *lock) {
 
-    // https://stackoverflow.com/questions/28968552/spin-lock-using-xchg
+    /*
+    Funcion que se encarga de que el thread que habia llamado a la funcion de
+    lock ya no tenga acceso exclusivo a las variables
+    Entradas: Puntero al lock que se va a utilizar
+    Restricciones: Ninguna
+    Salidas: Valor del lock atomicamente invertido
+    https://stackoverflow.com/questions/28968552/spin-lock-using-xchg
+    */
 
     unsigned int  tmp = 0;
     __asm__(
@@ -77,6 +120,15 @@ void my_mutex_unlock(int *lock) {
 }
 
 void my_mutex_trylock(int *lock) {
+
+    /*
+    Funcion que se encarga de olo el thread que llama a esta funcion
+    pueda usar las variables hasta que se desbloquee pero de manera menos 
+    prolongada
+    Entradas: Puntero al lock que se va a utilizar
+    Restricciones: Ninguna
+    Salidas: Valor del lock cambiado
+    */
 
     while (*lock){
         usleep(1000);

@@ -33,26 +33,45 @@ int i, j;
 
 void create_canvas(){
 
+
+  // Inicializacion de ncurses (necesario)
   int x = 0, y = 0;
+  
   initscr();
+  
   noecho();
+  
   curs_set(FALSE);
 
+  // Puntero temporal que nos ayudara a recorrer la lista de monitores
   monitor_info *temp_monitor = (monitor_info *) malloc(sizeof(monitor_info));
   temp_monitor = configuration -> monitors_list -> head;
 
+  // Se recorre la lista de monitores en config
 	while(temp_monitor != NULL){
+
+      // Se crea un nuevo window por cada monitor y se guarda en la estructura
       temp_monitor -> canvas_window = newwin(temp_monitor -> height_canvas_size,temp_monitor -> width_canvas_size, y, x);
-      x+=temp_monitor -> width_canvas_size;
+      
+      // Se posicionan en la terminal segun el ancho de cada uno
+      x += temp_monitor -> width_canvas_size;
+      
       //y+=temp_monitor -> height_canvas_size;
+      
+      // Funcion de ncurses para pintar los bordes del window
       box(temp_monitor -> canvas_window, 0, 0);
+      
+      // Es necesario para mostrar los cambios hechos en window
       wrefresh(temp_monitor-> canvas_window);
-		  temp_monitor = temp_monitor -> next;
+		  
+      // Se mueve al siguiente
+      temp_monitor = temp_monitor -> next;
 	}
 
 
   //printf("se ha creado el canvas con %d filas y %d columnas\n",height_canvas_size, width_canvas_size);
 }
+
 /*
 void clear_windows(){
   monitor_info *temp_monitor = (monitor_info *) malloc(sizeof(monitor_info));
